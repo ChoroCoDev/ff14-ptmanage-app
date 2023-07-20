@@ -3,11 +3,14 @@ import { getKeys } from '@/methods'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 type Props = {
-  [key in DataCentars]: Servers[]
+  dcLists: {
+    [key in DataCentars]: Servers[]
+  }
+  setValues?: Function
 }
 
-const DCSelecter = (props: Props) => {
-  const dataCentars = useMemo((): DataCentars[] => getKeys(props), [])
+const DCSelecter = ({ dcLists, setValues }: Props) => {
+  const dataCentars = useMemo((): DataCentars[] => getKeys(dcLists), [])
   const [dataCentar, setDataCentar] = useState<DataCentars>()
   const [server, setServer] = useState<Servers>()
 
@@ -21,6 +24,12 @@ const DCSelecter = (props: Props) => {
     setServer(e.target.value as Servers)
     console.log(e.target.value)
   }, [])
+
+  useEffect(() => {
+    if (!server) return
+    if (!setValues) return
+    setValues(server)
+  })
 
   return (
     <div className='container flex flex-row items-center my-4'>
@@ -39,7 +48,7 @@ const DCSelecter = (props: Props) => {
           id='select-server'
           onChange={changeServer}>
           <option value=''>-----</option>
-          {props[dataCentar].map((server, index) => (
+          {dcLists[dataCentar].map((server, index) => (
             <option key={'server-' + index} value={server}>
               {server}
             </option>
