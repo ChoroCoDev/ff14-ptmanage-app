@@ -4,6 +4,7 @@ import XIVAPI, { CharacterResult } from '@/api/XIVAPI'
 import Image from 'next/image'
 import DCSelecter from '@/components/Selecter/DC'
 import SearchCharacter from '@/app/MyPage/SearchCharacter'
+import { getAllDCs, getRegions } from '@/api'
 
 type CharacterSearchProps = {
   name: string
@@ -16,7 +17,9 @@ const getPosts = async () => {
 }
 
 export const MyPage = async () => {
-  const dcLists = await getPosts()
+  const regions = await getRegions()
+  const dcLists = await getAllDCs()
+  console.log(regions)
 
   return (
     <section>

@@ -9,10 +9,31 @@ type Props = {
   setValues?: Function
 }
 
-const DCSelecter = ({ dcLists, setValues }: Props) => {
+export const RegionSelecter = () => {
+  const regions = ['Japan', 'NorthAmerica', 'Europe', 'Oseania', 'China']
+  return (
+    <select className='border rounded w-36 mr-2' name='dc' id='select-dc'>
+      <option value=''>-----</option>
+      {regions.map((region, index) => (
+        <option key={'region-' + index} value={region}>
+          {region}
+        </option>
+      ))}
+    </select>
+  )
+}
+
+export const DCSelecter = ({ dcLists, setValues }: Props) => {
   const dataCentars = useMemo((): DataCentars[] => getKeys(dcLists), [])
+  const regions = ['Japan', 'NorthAmerica', 'Europe', 'Oseania', 'China']
+  const [region, setRegion] = useState<DataCentars>()
   const [dataCentar, setDataCentar] = useState<DataCentars>()
   const [server, setServer] = useState<Servers>()
+
+  const changeRegion = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault()
+    setRegion(e.target.value as DataCentars)
+  }, [])
 
   const changeDC = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault()
@@ -33,6 +54,13 @@ const DCSelecter = ({ dcLists, setValues }: Props) => {
 
   return (
     <div className='container flex flex-row items-center my-4'>
+      <select className='border rounded w-36 mr-2' name='dc' id='select-dc' onChange={changeDC}>
+        {regions.map((region, index) => (
+          <option key={'region-' + index} value={region}>
+            {region}
+          </option>
+        ))}
+      </select>
       <select className='border rounded w-36 mr-2' name='dc' id='select-dc' onChange={changeDC}>
         <option value=''>-----</option>
         {dataCentars.map((dc, index) => (
@@ -58,5 +86,7 @@ const DCSelecter = ({ dcLists, setValues }: Props) => {
     </div>
   )
 }
+
+export const ServerSelecter = () => {}
 
 export default DCSelecter
